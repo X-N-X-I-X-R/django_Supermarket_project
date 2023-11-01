@@ -1,0 +1,1 @@
+# django_Supermarket_project
