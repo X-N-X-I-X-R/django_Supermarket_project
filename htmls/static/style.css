@@ -1,0 +1,169 @@
+body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('background.jpg'); /* התמונה שתשימו כרקע */
+      background-size: 1920px 1080px; /* רזולוציה רצויה לרקע */
+      background-attachment: fixed; /* תשמור את התמונה במקום גם במעבר לעמוד */
+      background-position: center; /* תיצוב התמונה במרכז העמוד */
+      filter: grayscale(0%) brightness(100%); /* אפקט שחור-לבן והבהרת התמונה */
+    }
+    
+    
+    /* עיצוב כרטיסי מוצר */
+    .product-card {
+      width: 200px;
+      margin: 10px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      padding: 10px;
+      box-shadow: 2px 2px 5px #ccc;
+      display: inline-block;
+      transition: transform 0.3s ease;
+      text-align: center;
+      border-radius: 5px;
+    }
+    
+    /* עיצוב תמונת המוצר בכרטיס */
+    .product-card .product-image {
+      width: 100%;
+      height: auto;
+    }
+    
+    /* אפקט כאשר העכבר עובר מעל הכרטיס */
+    .product-card:hover {
+      transform: scale(1.05);
+      background-color: #f0f0f0;
+    }
+    
+    /* עיצוב פרטי המוצר */
+    .product-details {
+      color: #555;
+      margin: 10px 0;
+    }
+    
+    /* עיצוב כפתור ההוספה לסל */
+    .product-button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      border-radius: 5px;
+    }
+    
+    /* אפקט כאשר העכבר עובר מעל הכפתור */
+    .product-button:hover {
+      background-color: #0056b3;
+    }
+    
+    /* עיצוב פריטי הסל */
+    .cart-items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    
+    /* עיצוב כל פריט בסל */
+    .cart-item {
+      width: 200px;
+      margin: 10px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      padding: 10px;
+      box-shadow: 2px 2px 5px #ccc;
+      display: inline-block;
+      transition: transform 0.3s ease;
+      text-align: center;
+      border-radius: 5px;
+    }
+    
+    /* אפקט כאשר העכבר עובר מעל הפריט בסל */
+    .cart-item:hover {
+      transform: scale(1.05);
+      background-color: #f0f0f0;
+    }
+    
+    /* עיצוב הNavbar */
+    .navbar {
+      margin-bottom: 20px;
+      background-color: #FF6B6B;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .navbar-brand {
+      color: #fff;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .navbar-toggler-icon {
+      background-color: #fff;
+    }
+    
+    .navbar-nav .nav-link {
+      color: #090909;
+      font-weight: bold;
+    }
+    
+    .navbar-nav .nav-link:hover {
+      background-color: #F47E7E;
+      border-radius: 10px;
+    }
+    
+    .navbar-text {
+      color: #fff;
+    }
+    
+    /* עיצוב התוכן בתיקיה "tab-content" */
+    .container.tab-content {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px #ccc;
+      margin-top: 20px;
+    }
+    .content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  h1 {
+      font-family: Arial, sans-serif;
+      color: #333;
+  }
+  /* Style the top logo */
+.top-logo {
+  text-align: center;
+  background-color: #FF6B6B;
+  padding: 10px 0;
+}
+
+.top-logo img {
+  height: 40px; /* Adjust the height as needed */
+}
+
+/* Style the Login and Register buttons */
+.nav-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007BFF; /* Button background color */
+  color: #fff; /* Text color */
+  text-decoration: none;
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+  margin-right: 10px; /* Add some space between the buttons */
+}
+
+.nav-button:hover {
+  background-color: #0056b3; /* Change background color on hover */
+}
+

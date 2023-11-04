@@ -17,6 +17,7 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -26,7 +27,10 @@ SECRET_KEY = "django-insecure-$_-8zr)ohr&d6g_#($ivo+su-wrx2bs0wmd642g1axo!y%ae%s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+
+
+
 
 
 # Application definition
@@ -41,6 +45,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     "back",
     "rest_framework",
+    "corsheaders",
+    
+    
+    
   
 ]
 REST_FRAMEWORK = {
@@ -87,7 +95,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
+
 
 ROOT_URLCONF = "front.urls"
 

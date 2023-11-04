@@ -1,4 +1,5 @@
 
+from django.db import IntegrityError
 from rest_framework.decorators import api_view,permission_classes #! הוספת קלאס הרשאות 
 from rest_framework.response import Response
 from .models import Product,Category,Customer
@@ -6,7 +7,7 @@ from rest_framework import serializers
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated #! הוספת הרשאות ושימוש בטוקן 
 from django.contrib.auth.models import User #! גישה למודל קיים בטבלה של ג׳אנגו 
-
+from rest_framework.views import APIView
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -32,122 +33,112 @@ def manage_member(request):
 
 @api_view(["POST"])
 def manage_register(request):
-      x= User.objects.create_superuser(username="itay" ,password= "123")
-      return Response  (f'status: success, content: Register, name: {x}')
+    username = request.data.get("username")
+    password = request.data.get("password")
 
-@api_view(["GET", "POST", "PUT", "DELETE"])
-def manage_products(request, product_id=None):
-    if request.method == "GET":
-        if product_id is not None:
-            # Retrieve a specific product by ID
-            product = Product.objects.get(id=product_id)
-            serializer = ProductSerializer(product)
-            return Response(serializer.data)
-        else:
-            # Retrieve a list of products
-            products = Product.objects.all()
-            serializer = ProductSerializer(products, many=True)
-            return Response(serializer.data)
+    if not username or not password:
+        return Response({"status": "error", "message": "Username and password are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "POST":
-        # Create a new product
-        serializer = ProductSerializer(data=request.data)
+    try:
+        user = User.objects.create_user(username=username, password=password)
+        return Response({"status": "success", "message": "User registered successfully."})
+    except IntegrityError:
+        return Response({"status": "error", "message": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+
+  
+#!===============================================================
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Category
+from rest_framework.permissions import IsAuthenticated
+
+class CategoryView(APIView):
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request):  # Make sure 'request' parameter is included
+        my_model = Category.objects.all()
+        serializer = CategorySerializer(my_model, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request):
+        serializer = CategorySerializer(data=request.data, context={'user': request.user})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "PUT":
-        if product_id is not None:
-            # Update an existing product
-            product = Product.objects.get(id=product_id)
-            serializer = ProductSerializer(product, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == "DELETE":
-        if product_id is not None:
-            # Delete a product by ID
-            product = Product.objects.get(id=product_id)
-            product.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(["GET", "POST", "PUT", "DELETE"])
-def manage_category(request, category_id=None):
-    if request.method == "GET":
-        if category_id is not None:
-            # Retrieve a specific category by ID
-            category = Category.objects.get(id=category_id)
-            serializer = CategorySerializer(category)
+    def put(self, request, pk):
+        my_model = Category.objects.get(pk=pk)
+        serializer = CategorySerializer(my_model, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
             return Response(serializer.data)
-        else:
-            # Retrieve a list of categories
-            categories = Category.objects.all()
-            serializer = CategorySerializer(categories, many=True)
-            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "POST":
-        # Create a new category
-        serializer = CategorySerializer(data=request.data)
+    def delete(self, request, pk):
+        my_model = Category.objects.get(pk=pk)
+        my_model.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+ 
+
+class ProductView(APIView):
+    #permission_classes = [IsAuthenticated]
+
+    def get(self, request):  # Make sure 'request' parameter is included
+        my_model = Product.objects.all()
+        serializer = ProductSerializer(my_model, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request):
+        serializer = ProductSerializer(data=request.data, context={'user': request.user})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "PUT":
-        if category_id is not None:
-            # Update an existing category
-            category = Category.objects.get(id=category_id)
-            serializer = CategorySerializer(category, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == "DELETE":
-        if category_id is not None:
-            # Delete a category by ID
-            category = Category.objects.get(id=category_id)
-            category.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-@api_view(["GET", "POST", "PUT", "DELETE"])
-def manage_customers(request, customer_id=None):
-    if request.method == "GET":
-        if customer_id is not None:
-            # Retrieve a specific customer by ID
-            customer = Customer.objects.get(id=customer_id)
-            serializer = CustomerSerializer(customer)
+    def put(self, request, pk):
+        my_model = Product.objects.get(pk=pk)
+        serializer = ProductSerializer(my_model, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
             return Response(serializer.data)
-        else:
-            # Retrieve a list of customers
-            customers = Customer.objects.all()
-            serializer = CustomerSerializer(customers, many=True)
-            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "POST":
-        # Create a new customer
-        serializer = CustomerSerializer(data=request.data)
+    def delete(self, request, pk):
+        my_model = Product.objects.get(pk=pk)
+        my_model.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+class CustomerView(APIView):
+    #permission_classes = [IsAuthenticated]
+
+    
+    def get(self, request):  # Make sure 'request' parameter is included
+        my_model = Customer.objects.all()
+        serializer = CustomerSerializer(my_model, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request):
+        serializer = CustomerSerializer(data=request.data, context={'user': request.user})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "PUT":
-        if customer_id is not None:
-            # Update an existing customer
-            customer = Customer.objects.get(id=customer_id)
-            serializer = CustomerSerializer(customer, data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, pk):
+        my_model = Customer.objects.get(pk=pk)
+        serializer = CustomerSerializer(my_model, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "DELETE":
-        if customer_id is not None:
-            # Delete a customer by ID
-            customer = Customer.objects.get(id=customer_id)
-            customer.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+    def delete(self, request, pk):
+        my_model = Customer.objects.get(pk=pk)
+        my_model.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
