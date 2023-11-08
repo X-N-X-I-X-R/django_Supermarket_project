@@ -16,28 +16,26 @@ Including another URLconf
 """
 
 from django.urls import path
-from . import views , views_original
+from . import views 
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth import views as auth_views
 
 
+
 urlpatterns = [
     
-    #!              ---- 1 way to create with =  views_original.py -----
-    path("products/", views_original.manage_products),    
-    path("customers/", views_original.manage_customers),
-    path("category/", views_original.manage_category),
-    
+
     
     #!              ---- 2 way to create with =  views.py ----- eyal virision 
 
   
     path('get/category/', views.CategoryView.as_view()),
     path('get/Product/', views.ProductView.as_view()),
-    path('get/Customer/', views.CustomerView.as_view()),
+    path('get/Customer/new', views.CustomerCreateView.as_view()),
+    path('get/Customer/order', views.OrderCreateView.as_view()),
     
     #!              ----  TOKEN  -----
-    path('login/',TokenObtainPairView.as_view()),
+    path('login/',views.MyTokenObtainPairView.as_view()),
     path("member/", views.manage_member),
     path("register/", views.manage_register),
 

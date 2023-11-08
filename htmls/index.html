@@ -11,8 +11,11 @@
 </head>
 <a href="login.html" class="nav-button">Login</a>
 <a href="register.html" class="nav-button">Register</a>
+<button  onclick="checkOut()">Pay Now</button>
 
-<body>
+
+<body data-user-id="user1">  
+
     <div class="top-logo">
         <img src="/htmls/static/walmartLogo (1).svg" alt="Walmart Logo" height="30">
     </div>
@@ -54,11 +57,20 @@
     <div id="totalprice">
          <span id="total-amount" ></span>
     </div>
+    <div>
+
+    </div>
+    <h1>My Cart :</h1>
+
+    <div class="cart-items" >
+        
+
   
     <script>
-        
+        const userId = document.body.getAttribute("data-user-id");
+
         const cart = [];
-        const MY_SERVER = "http://127.0.0.1:8000";
+        const MY_SERVER = "http://127.0.0.1:8000/";
      
         const load_display = async () => {
             try {
@@ -83,12 +95,13 @@
                         <p> ${products.name}</p>
                         <p> ${products.price}$</p>
                         <p> Quantity: <span id="total-quantity-${productID}">0</span></p>
-                        <button type="button" class="btn btn-outline-success" onclick="buyIthem(${products.id}, '${products.img}', '${products.name}', ${products.price}, '${productID}')" class="product-button">Add to cart</button>
-                        <button type="button" class="btn btn-outline-danger" onclick="deleteIthem(${products.id}, '${products.img}', '${products.name}', ${products.price}, '${productID}')" class="product-button">Delete from cart</button>
-                    `;
+                        <button type="button" class="btn btn-outline-success" onclick="buyItem(${products.id}, '${products.img}', '${products.name}', ${products.price}, '${productID}')" class="product-button">Add to cart</button>
+                        <button type="button" class="btn btn-outline-danger product-button" onclick="deleteItem(${products.id}, '${products.img}', '${products.name}', ${products.price}, '${productID}')">Delete from cart</button>
+                        `;
 
                     productCard.append(image, details);
                     display.appendChild(productCard);
+                    
                 });
             } catch (error) {
                 console.error(error);
@@ -97,33 +110,35 @@
 
         load_display();
 
-        const buyIthem = (id, image, name, price, productID) => {
+        const buyItem = (id, image, name, price, productID) => {
             const existingCartItem = cart.find(item => item.id === id);
-            
+    
             if (existingCartItem) {
                 existingCartItem.quantity++;
             } else {
                 cart.push({ id: id, quantity: 1, image: image, name: name, price: price });
             }
-
-            localStorage.setItem("purchasedItems", JSON.stringify(cart));
+    
+            sessionStorage.setItem("purchasedItems", JSON.stringify(cart));
             updateTotalPrice();
             updateCartContent();
             updateProductQuantity(productID);
-        }
-
-        const deleteIthem = (id, image, name, price, productID) => {
+            console.table(cart)
+        };
+    
+        const deleteItem = (id, productID) => {
             const existingCartItem = cart.find(item => item.id === id);
-
+    
             if (existingCartItem && existingCartItem.quantity > 0) {
                 existingCartItem.quantity--;
-                localStorage.setItem("purchasedItems", JSON.stringify(cart));
+                sessionStorage.setItem("purchasedItems", JSON.stringify(cart));
                 updateTotalPrice();
                 updateCartContent();
                 updateProductQuantity(productID);
-            }
-        }
+                console.table("prodct deleted : ",cart)
 
+            }
+        };
         const calculateTotalPrice = () => {
             let totalPrice = 0;
 
@@ -172,12 +187,7 @@
             for (const item of cart) {
                 const cartItem = document.createElement("div");
                 cartItem.className = "cart-item";
-
-                const itemImage = document.createElement("img");
-                itemImage.src = item.image;
-                itemImage.alt = item.name;
-                itemImage.className = "product-image";
-
+        
                 const itemDetails = document.createElement("div");
                 itemDetails.className = "product-details";
                 itemDetails.innerHTML = `
@@ -185,28 +195,83 @@
                     <p>Price: ${item.price}</p>
                     <p>Quantity: ${item.quantity}</p>
                 `;
-
-                cartItem.appendChild(itemImage);
+        
                 cartItem.appendChild(itemDetails);
                 cartContent.appendChild(cartItem);
             }
         }
-        // פונקציה לטעינת הנתונים מ-LocalStorage
-const loadCartFromLocalStorage = () => {
-    const storedCart = localStorage.getItem("purchasedItems");
+        
+        // פונקציה לטעינת הנתונים מ-sessionStorage
+        const loadCartFromsessionStorage = () => {
+            const userId = document.body.getAttribute("data-user-id");
+            const storedCart = sessionStorage.getItem(`purchasedItems-${userId}`);
+            
+            if (storedCart) {
+                cart.length = 0;  // Clear the existing cart
+                cart.push(...JSON.parse(storedCart)); 
+                updateTotalPrice();
+                updateCartContent();
+            }
+        }
+        
+        
+        
+        window.addEventListener('load', loadCartFromsessionStorage);
+        
 
-    if (storedCart) {
-        cart.length = 0; 
-        cart.push(...JSON.parse(storedCart)); 
-        updateTotalPrice();
-        updateCartContent();
+
+        
+
+
+</script>
+
+<script>
+    const checkOut = async () => {
+        const token = sessionStorage.getItem("user_token");
+        const myCart = cart;  // Assuming 'cart' is your array of items
+    
+        const requestData = {
+            items: myCart.map(item => ({
+                product: item.name, // Replace with the actual field name
+                quantity: item.quantity, // Replace with the actual field name
+            })),
+            user: parseInt(userId), // Convert the user ID to an integer
+        };
+    
+        console.log("Request data:", requestData);
+        const MY_SERVER = "http://127.0.0.1:8000/";
+        const endpoint1 = "get/Customer/new";
+        const endpoint2 = "get/Customer/order";
+    
+        try {
+            const response1 = await axios.post(`${MY_SERVER}${endpoint1}`, requestData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Response for endpoint 1:', response1.data);
+    
+            const response2 = await axios.post(`${MY_SERVER}${endpoint2}`, requestData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Response for endpoint 2:', response2.data);
+        } catch (error) {
+            if (error.request) {
+                // The request was made but no response was received
+                console.error('No response received:', error.request);
+            } else {
+                // Something happened in setting up the request
+                console.error('Error:', error.message);
+            }
+        }
     }
-}
-window.addEventListener('load', loadCartFromLocalStorage);
-
-
-
-
+    
+    
+    
 </script>
 </body>
 </html>

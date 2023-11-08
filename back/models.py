@@ -1,4 +1,5 @@
 from django.db import models 
+from django.contrib.auth.models import User
 
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
@@ -21,13 +22,26 @@ class Product(models.Model):
 
   
 
-class Customer(models.Model):
+
+
+class Customer_orders(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255, null=True)
-    mail = models.EmailField(max_length=255, null=True)
-    address = models.CharField(max_length=255, null=True)
-    phone_number = models.CharField(max_length=255, null=True)
-    
+    user =models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
+    createdTime=models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
-        return f"ID => {self.id}, Name => {self.name},Phone => {self.phone_number}, Mail => {self.mail} ,Address => {self.address}"
+        return self.user  
+
+class OrderItems(models.Model):
+    id = models.AutoField(primary_key=True)
+    order = models.ForeignKey(Customer_orders, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    quantity = models.PositiveIntegerField()
+    item_price = models.FloatField()
+    
+    def subtotal(self):
+        return self.quantity * self.item_price
+
+    def __str__(self):
+        return f"Order Item {self.id} - {self.product.name}"
 

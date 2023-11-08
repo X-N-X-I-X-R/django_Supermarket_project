@@ -1,7 +1,7 @@
 
 from rest_framework.decorators import api_view,permission_classes #! הוספת קלאס הרשאות 
 from rest_framework.response import Response
-from .models import Product,Category,Customer
+from .models import Product,Category,Customer_orders
 from rest_framework import serializers
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated #! הוספת הרשאות ושימוש בטוקן 
@@ -21,8 +21,9 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Customer
+        model = Customer_orders
         fields = '__all__'
+
         
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
@@ -118,12 +119,12 @@ def manage_customers(request, customer_id=None):
     if request.method == "GET":
         if customer_id is not None:
             # Retrieve a specific customer by ID
-            customer = Customer.objects.get(id=customer_id)
+            customer = Customer_orders.objects.get(id=customer_id)
             serializer = CustomerSerializer(customer)
             return Response(serializer.data)
         else:
             # Retrieve a list of customers
-            customers = Customer.objects.all()
+            customers = Customer_orders.objects.all()
             serializer = CustomerSerializer(customers, many=True)
             return Response(serializer.data)
 
@@ -138,7 +139,7 @@ def manage_customers(request, customer_id=None):
     elif request.method == "PUT":
         if customer_id is not None:
             # Update an existing customer
-            customer = Customer.objects.get(id=customer_id)
+            customer = Customer_orders.objects.get(id=customer_id)
             serializer = CustomerSerializer(customer, data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -148,6 +149,6 @@ def manage_customers(request, customer_id=None):
     elif request.method == "DELETE":
         if customer_id is not None:
             # Delete a customer by ID
-            customer = Customer.objects.get(id=customer_id)
+            customer = Customer_orders.objects.get(id=customer_id)
             customer.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
