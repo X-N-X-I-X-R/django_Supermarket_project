@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <link rel="stylesheet" href="your-styles.css"> <!-- Add the path to your CSS file here -->
+    <link rel="stylesheet" href="/htmls/static/css/style.css"> <!-- Add the path to your CSS file here -->
     <style>
         body {
             display: flex;
@@ -97,7 +97,7 @@
     <iframe class="youtube-video" src="https://www.youtube.com/embed/VfX-brlBH18?si=E4RcgTHUZVm3zS_t" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     <div id="youtube-placeholder" class="youtube-video"></div>
     <script>
-        const MY_SERVER = "http://127.0.0.1:8000/login/";
+        const MY_SERVER = "https://firsttimerenderddw.onrender.com/login/";
         function parseJwt(token) {
             var base64Url = token.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
