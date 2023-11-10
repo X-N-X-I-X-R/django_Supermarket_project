@@ -165,20 +165,39 @@ class CustomerCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class OrderCreateView(APIView):
     def post(self, request):
         try:
-            # Retrieve the order instance using the order_id from the request data
-            order_id = request.data.get('order_id')
-            order = get_object_or_404(OrderItems, id=order_id)
+            new_order = Customer_orders(user=request.user)
+            new_order.save()
+            # Assuming you are sending 'items' as a list of dictionaries
+            # Each item dictionary should contain 'product_id', 'quantity', and 'item_price'
+            for item_data in request.data.get('items', []):
+                product_id = item_data.get('product_id')
+                quantity = item_data.get('quantity')
+                item_price = item_data.get('item_price')
 
-            # Update the serializer context to include the order object
-            serializer = OrderDetailsSerializer(data=request.data, context={'order': order})
+                # Validate the product_id, quantity, and item_price
+                if not product_id or not quantity or not item_price:
+                    return Response({'error': 'Missing item fields: product_id, quantity, item_price'}, status=status.HTTP_400_BAD_REQUEST)
+                
+                # Retrieve the product instance
+                product = get_object_or_404(Product, id=product_id)
+   # Link the OrderItems to the new order
+                order_item = OrderItems(
+                    order=new_order,  # Link to the new order
+                    product=product,
+                    quantity=quantity,
+                    item_price=item_price
+                )
+                order_item.save()
 
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': 'Order created successfully'}, status=status.HTTP_201_CREATED)
+
         except Exception as e:
+            # Log the exception to the console or a file
             print(f"Error in OrderCreateView: {e}")
-            return Response({"error": "An error occurred while processing the order."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # Consider sending back the exception message only in a development setting
+            # In production, it's better to send a generic error message
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

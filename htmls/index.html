@@ -225,55 +225,72 @@
 
 
 </script>
-
 <script>
-const checkOut = async () => {
-    const token = sessionStorage.getItem("user_token");
-    const myCart = cart;  // Assuming 'cart' is an array of items
 
-    const requestData = {
-        items: myCart.map(item => ({
-            product: parseInt(item.productId), // Use product ID, not name
-            quantity: item.quantity,
-            item_price: item.price, // Assuming each item has a 'price' field
-        })),
-        user: parseInt(userId), // Convert the user ID to an integer
-    };
 
-    console.log("Request data:", requestData);
+    const checkOut = async () => {
+        const token = sessionStorage.getItem("user_token");
+        const myCart = cart;  // Assuming 'cart' is an array of items
 
-    const MY_SERVER = "http://127.0.0.1:8000/";
-    const endpoint1 = "get/Customer/new";
-    const endpoint2 = "get/Customer/order";
+        // Map the cart items to the structure your backend expects
+        const itemsData = myCart.map(item => ({
+            product_id: item.id, // Use the correct property 'id' from your cart items
+            quantity: item.quantity, // Use 'quantity' directly
+            item_price: item.price, // Use 'price' for item_price
+            
+        }));
 
-    try {
-        const response1 = await axios.post(`${MY_SERVER}${endpoint1}`, requestData, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log('Response for endpoint 1:', response1.data);
+        function getUserId() {
+    // Example: Retrieving user ID from session storage
+    return sessionStorage.getItem('userId');
+}
 
-        const response2 = await axios.post(`${MY_SERVER}${endpoint2}`, requestData, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
-        console.log('Response for endpoint 2:', response2.data);
-    } catch (error) {
-        if (error.request) {
-            // The request was made but no response was received
-            console.error('No response received:', error.request);
-        } else {
-            // Something happened in setting up the request
-            console.error('Error:', error.message);
-        }
-    }
-};
+const userId = sessionStorage.getItem('userId'); // Or wherever the user ID is stored
 
+        const requestData = {
+            items: itemsData,
+            user: userId, // Ensure you have the userId if your backend requires it
+            // ... any other data fields that your endpoint requires
+        };
     
+        console.log("Request data:", requestData);
+    
+        const MY_SERVER = "http://127.0.0.1:8000/";
+        const endpoint1 = "get/Customer/new";
+        const endpoint2 = "get/Customer/order";
+    
+        try {
+            // You might want to adjust the requestData if endpoint1 expects different data
+            const response1 = await axios.post(`${MY_SERVER}${endpoint1}`, requestData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Response for endpoint 1:', response1.data);
+    
+            const response2 = await axios.post(`${MY_SERVER}${endpoint2}`, requestData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            console.log('Response for endpoint 2:', response2.data);
+            // Handle success, perhaps redirect or display a success message
+        } catch (error) {
+            if (error.response) {
+                console.error('Bad Response:', error.response.data);
+                // Display an error message to the user
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+                // Display an error message to the user
+            } else {
+                console.error('Error:', error.message);
+                // Display an error message to the user
+            }
+        }
+    };
 </script>
+    
 </body>
 </html>
