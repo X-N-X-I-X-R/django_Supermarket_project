@@ -14,12 +14,12 @@
 
 <body>
     <div class="top-logo">
-        <img src="/htmls/static/walmartLogo(1).svg" alt="Logo">
+        <img src="/htmls/static/walmartLogo.svg" alt="Logo">
     </div>
     <div id ="great"></div>
 
     <div class="content">
-        <img src="/product_images/images.png">
+        <img src="/htmls/static/images.png">
         <h1>Login</h1>
         <div>
             User name:<input id="user">
@@ -34,8 +34,9 @@
 
     <iframe class="youtube-video" src="https://www.youtube.com/embed/VfX-brlBH18?si=E4RcgTHUZVm3zS_t" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     <div id="youtube-placeholder" class="youtube-video"></div>
-    <script>
-        const MY_SERVER = "https://firsttimerenderddw.onrender.com/login/";
+    <script>// http://127.0.0.1:8000/
+    //https://firsttimerenderddw.onrender.com/login
+        const MY_SERVER = "http://127.0.0.1:8000/";
         function parseJwt(token) {
             var base64Url = token.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -48,32 +49,35 @@
         }
 
         const login = async () => {
-            const username = user.value;
-            const password = pwd.value;
+    const username = document.getElementById("user").value;
+    const password = document.getElementById("pwd").value;
+
+    try {
+        const res = await axios.post(MY_SERVER, {
+            "username": username,
+            "password": password
+        });
+
+        if (res.data && res.data.access) {
+            console.log("Login successful:", res.data.access);
+            const user = parseJwt(res.data.access).username;
+            sessionStorage.setItem("user_token", res.data.access);
+            const great = document.getElementById("great");
+            great.innerHTML = `<h1> Welcome Dr. ${user}`;
             
-    
-            try {
-                const res = await axios.post(MY_SERVER, {
-                    "username": username,
-                    "password": password
+            // Redirect to index.html
+            window.location.href = "index.html";
+        } else {
+            console.error("No access token received");
+            // Handle case where no token is received
+        }
+    } catch (error) {
+        console.error("Login failed:", error);
+        // Inform the user of the failed login attempt
+        // Example: alert("Login failed. Please try again.");
+    }
+};
 
-                });
-                
-                console.log(res.data.access);
-                const user = parseJwt(res.data.access).username;
-                sessionStorage.setItem("user_token", res.data.access);
-                const great = document.getElementById("great");
-                great.innerHTML = `<h1> Welcome Dr. ${user}`;
-
-                
-                
-                // Redirect to index.html
-                window.location.href = "index.html";
-            } catch (error) {
-                console.error("Login failed:", error);
-            }
-        }       //  להוסיף שמירה ללוקל סשן #######################
-        
 
     </script>
 </body>

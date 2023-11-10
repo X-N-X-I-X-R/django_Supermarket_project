@@ -38,13 +38,13 @@ body {
     
     /* עיצוב פרטי המוצר */
     .product-details {
-      color: #555;
+      color: rgb(85, 85, 85);
       margin: 10px 0;
     }
     
     /* עיצוב כפתור ההוספה לסל */
     .product-button {
-      background-color: #007BFF;
+      background-color: rgb(237, 196, 196);
       color: #fff;
       border: none;
       padding: 5px 10px;
@@ -55,7 +55,7 @@ body {
     
     /* אפקט כאשר העכבר עובר מעל הכפתור */
     .product-button:hover {
-      background-color: #0056b3;
+      background-color: #ff0000;
     }
     
     /* עיצוב פריטי הסל */
@@ -67,7 +67,7 @@ body {
     
     /* עיצוב כל פריט בסל */
     .cart-item {
-      width: 200px;
+      width: 100px;
       margin: 10px;
       border: 1px solid #ddd;
       background-color: #fff;
@@ -87,7 +87,9 @@ body {
     
     /* עיצוב הNavbar */
     .navbar {
-      margin-bottom: 20px;
+      background-image: linear-gradient(to right, #FF6B6B, #7900fa, #FF6B6B);
+
+      margin-bottom: 1px;
       background-color: #FF6B6B;
       box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
     }
@@ -98,18 +100,26 @@ body {
       font-weight: bold;
     }
     
+    .navbar-toggler,
     .navbar-toggler-icon {
-      background-color: #fff;
+      background-image: none !important; /* Removes any background image */
+      background-color: transparent !important; /* Ensures no background color */
+      border: none !important; /* Removes any border */
+      box-shadow: none !important; /* Removes any box shadow */
     }
     
+    
     .navbar-nav .nav-link {
+      transition: background-color 0.3s ease, color 0.3s ease;
+
+      
       color: #090909;
       font-weight: bold;
     }
     
     .navbar-nav .nav-link:hover {
-      background-color: #F47E7E;
       border-radius: 10px;
+       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
     }
     
     .navbar-text {
@@ -133,7 +143,7 @@ body {
       background: rgba(255, 255, 255, 0.8);
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 0 10px rgba(92, 57, 57, 0.2);
   }
   
   h1 {
@@ -143,19 +153,21 @@ body {
   /* Style the top logo */
 .top-logo {
   text-align: center;
-  background-color: #FF6B6B;
+  background-image: linear-gradient(to right, #FF6B6B, #7900fa, #FF6B6B);
   padding: 10px 0;
+  height: 50px;
 }
 
 .top-logo img {
-  height: 40px; /* Adjust the height as needed */
+  height: 40px;
+  width: 150px; /* Adjust the height as needed */
 }
 
 /* Style the Login and Register buttons */
 .nav-button {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #007BFF; /* Button background color */
+  background-color: #5e0aee; /* Button background color */
   color: #fff; /* Text color */
   text-decoration: none;
   border-radius: 5px; /* Rounded corners */
@@ -164,6 +176,28 @@ body {
 }
 
 .nav-button:hover {
-  background-color: #0056b3; /* Change background color on hover */
+  background-color: #00b33f; /* Change background color on hover */
 }
 
+.navbar-brand:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease;
+}
+.navbar-nav .nav-item.active .nav-link {
+  background-color: rgb(168, 255, 80);
+  border-radius: 10px;
+  color: #fff;
+}
+/* Assuming the 'Total Price' is within a class called '.cart-total' */
+.cart-total {
+  background-image: none;   /* Remove any background image */
+  background-color: #fff;   /* Set a white background or any color you prefer */
+  box-shadow: none;         /* Remove any box shadow */
+  color: #fcfcfc;              /* Set the color of the text, assuming it's dark */
+  /* Any other styling properties */
+}
+#navbar-total-price {
+  background-color: transparent !important; /* Ensure no background */
+  box-shadow: none !important; /* Remove any shadow */
+  color: #fdfdfd; /* Assuming you want a dark text color */
+}

@@ -18,7 +18,7 @@
 <body data-user-id="user1">  
 
     <div class="top-logo">
-        <img src="/htmls/static/walmartLogo(1).svg" alt="Walmart Logo" height="30">
+        <img src="/htmls/static/walmartLogo.svg" alt="Walmart Logo" height="30">
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Product Page</a>
@@ -38,8 +38,7 @@
                 <li>
                     <div class="navbar-text ml-auto" id="navbar-total-price">Total Price: 0</div>
                 </li>
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <a class="navbar-brand" href="#">  </a>
+             
                
             </ul>
         </div>
@@ -70,8 +69,9 @@
     <script>
         const userId = document.body.getAttribute("data-user-id");
 
-        const cart = [];
-        const MY_SERVER = "https://firsttimerenderddw.onrender.com";
+        const cart = [];// http://127.0.0.1:8000/
+        // https://firsttimerenderddw.onrender.com
+        const MY_SERVER = " http://127.0.0.1:8000/";
      
         const load_display = async () => {
             try {
@@ -227,51 +227,52 @@
 </script>
 
 <script>
-    const checkOut = async () => {
-        const token = sessionStorage.getItem("user_token");
-        const myCart = cart;  // Assuming 'cart' is your array of items
-    
-        const requestData = {
-            items: myCart.map(item => ({
-                product: item.name, // Replace with the actual field name
-                quantity: item.quantity, // Replace with the actual field name
-            })),
-            user: parseInt(userId), // Convert the user ID to an integer
-        };
-    
-        console.log("Request data:", requestData);
-        const MY_SERVER = "https://firsttimerenderddw.onrender.com";
-        const endpoint1 = "get/Customer/new";
-        const endpoint2 = "get/Customer/order";
-    
-        try {
-            const response1 = await axios.post(`${MY_SERVER}${endpoint1}`, requestData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            console.log('Response for endpoint 1:', response1.data);
-    
-            const response2 = await axios.post(`${MY_SERVER}${endpoint2}`, requestData, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-            console.log('Response for endpoint 2:', response2.data);
-        } catch (error) {
-            if (error.request) {
-                // The request was made but no response was received
-                console.error('No response received:', error.request);
-            } else {
-                // Something happened in setting up the request
-                console.error('Error:', error.message);
-            }
+const checkOut = async () => {
+    const token = sessionStorage.getItem("user_token");
+    const myCart = cart;  // Assuming 'cart' is an array of items
+
+    const requestData = {
+        items: myCart.map(item => ({
+            product: parseInt(item.productId), // Use product ID, not name
+            quantity: item.quantity,
+            item_price: item.price, // Assuming each item has a 'price' field
+        })),
+        user: parseInt(userId), // Convert the user ID to an integer
+    };
+
+    console.log("Request data:", requestData);
+
+    const MY_SERVER = "http://127.0.0.1:8000/";
+    const endpoint1 = "get/Customer/new";
+    const endpoint2 = "get/Customer/order";
+
+    try {
+        const response1 = await axios.post(`${MY_SERVER}${endpoint1}`, requestData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log('Response for endpoint 1:', response1.data);
+
+        const response2 = await axios.post(`${MY_SERVER}${endpoint2}`, requestData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        console.log('Response for endpoint 2:', response2.data);
+    } catch (error) {
+        if (error.request) {
+            // The request was made but no response was received
+            console.error('No response received:', error.request);
+        } else {
+            // Something happened in setting up the request
+            console.error('Error:', error.message);
         }
     }
-    
-    
+};
+
     
 </script>
 </body>
