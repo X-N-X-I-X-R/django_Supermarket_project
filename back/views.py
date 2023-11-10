@@ -1,5 +1,6 @@
 
 from django.db import IntegrityError
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view,permission_classes #! הוספת קלאס הרשאות 
 from rest_framework.response import Response
 from .models import OrderItems, Product,Category,Customer_orders
@@ -38,10 +39,10 @@ class OrderDetailsSerializer(serializers.ModelSerializer):
         fields = '__all__'  
         
         
-@api_view(["GET"])
+@api_view(["GET","POST"])
 @permission_classes([IsAuthenticated])
 def manage_member(request):
-      print(request.user) # מדפיס את שם המשתמש שנכנס לתוכנה 
+      print(request.user) 
       return Response({"secret":"this is my secret key"})   
 
 @api_view(["POST"])
@@ -164,16 +165,20 @@ class CustomerCreateView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-           
 class OrderCreateView(APIView):
     def post(self, request):
         try:
-            serializer = OrderDetailsSerializer(data=request.data)
+            # Retrieve the order instance using the order_id from the request data
+            order_id = request.data.get('order_id')
+            order = get_object_or_404(OrderItems, id=order_id)
+
+            # Update the serializer context to include the order object
+            serializer = OrderDetailsSerializer(data=request.data, context={'order': order})
+
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
-            # Log the exception for debugging
             print(f"Error in OrderCreateView: {e}")
             return Response({"error": "An error occurred while processing the order."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

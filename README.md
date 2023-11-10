@@ -15,8 +15,11 @@ https://github.com/01001110IR/django_Supermarket_project.git# django_Supermarket
 
 
 
+# ~TODO 
 
-
+תקלה בשליחת מידע לשרת  בפונקציית הcheckout 
+תקלה בהצגת התמונות בענן  render -- בעיית בנתיבים 
+יצירת דף checkout 
 
 
 

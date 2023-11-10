@@ -35,8 +35,8 @@ urlpatterns = [
     path('get/Customer/order', views.OrderCreateView.as_view()),
     
     #!              ----  TOKEN  -----
-    path('login/',views.MyTokenObtainPairView.as_view()),
-    path("member/", views.manage_member),
+    path('',views.MyTokenObtainPairView.as_view()),
+    path("login/", views.manage_member),
     path("register/", views.manage_register),
 
 
