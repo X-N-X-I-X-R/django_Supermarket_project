@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body data-user-id="user1">  
+    <div class="top-logo">
+        <img src="/htmls/static/walmartLogo.svg" alt="Walmart Logo" height="30">
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Checkout</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+
+    <div class="container">
+      <h1>Checkout</h1>
+      <div class="checkout-content">
+          <h3>Your Cart Items:</h3>
+          <table class="table">
+              <thead>
+                  <tr>
+                      <th>Product Name</th>
+                      <th>Quantity</th>
+                      <th>Total Price</th>
+                  </tr>
+              </thead>
+              <tbody id="cart-items">
+                  <!-- Cart items will be inserted here -->
+              </tbody>
+          </table>
+          <div class="total-amount" id="checkout-total-amount">
+              <!-- Total amount will be populated here -->
+          </div>
+          <button onclick="checkOut()" class="btn btn-primary">Pay Now</button>
+      </div>
+  </div>
+
+
+
+  <script>
+      const checkOut = async () => {
+    const token = sessionStorage.getItem("user_token");
+    const myCart = cart;  // Assuming 'cart' is an array of items
+
+    // Map the cart items to a string format for query parameters
+    const itemsQuery = myCart.map(item => `items[]=${item.id},${item.quantity},${item.price}`).join('&');
+
+    const userId = sessionStorage.getItem('userId'); // Retrieve user ID from session storage
+
+    const MY_SERVER = "http://127.0.0.1:8000/";
+    const endpoint1 = "get/Customer/new";
+    const endpoint2 = "get/Customer/order";
+
+    try {
+        // Append query parameters to the URL
+        const url1 = `${MY_SERVER}${endpoint1}?user=${userId}&${itemsQuery}`;
+        const url2 = `${MY_SERVER}${endpoint2}?user=${userId}&${itemsQuery}`;
+
+        // Make GET requests
+        const response1 = await axios.get(url1, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log('Response for endpoint 1:', response1.data);
+
+        const response2 = await axios.get(url2, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        console.log('Response for endpoint 2:', response2.data);
+        // Handle success, perhaps redirect or display a success message
+    } catch (error) {
+        if (error.response) {
+            console.error('Bad Response:', error.response.data);
+            // Display an error message to the user
+        } else if (error.request) {
+            console.error('No response received:', error.request);
+            // Display an error message to the user
+        } else {
+            console.error('Error:', error.message);
+            // Display an error message to the user
+        }
+    }
+};
+
+  </script>
+</body>
+</html>
+
+   
