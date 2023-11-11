@@ -30,14 +30,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-[
-    {
-        "AllowedHeaders": ["*"],
-        "AllowedMethods": ["GET"],
-        "AllowedOrigins": ["https://lighthearted-pika-2f33e3.netlify.app"],
-        "ExposeHeaders": []
-    }
-]
 
 
 
@@ -92,6 +84,7 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
  
     'JTI_CLAIM': 'jti',
+
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
