@@ -13,7 +13,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     price = models.FloatField()
     category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
-    img = models.ImageField(upload_to='htmls/static')
+    img = models.ImageField()
    
 
 
