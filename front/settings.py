@@ -107,6 +107,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "front.urls"
 
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

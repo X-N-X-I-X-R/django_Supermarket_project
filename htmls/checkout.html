@@ -54,8 +54,8 @@
     const itemsQuery = myCart.map(item => `items[]=${item.id},${item.quantity},${item.price}`).join('&');
 
     const userId = sessionStorage.getItem('userId'); // Retrieve user ID from session storage
-
-    const MY_SERVER = "https://grocerystoredjango.onrender.com";
+// http://127.0.0.1:8000/
+    const MY_SERVER = " http://127.0.0.1:8000/";
     const endpoint1 = "get/Customer/new";
     const endpoint2 = "get/Customer/order";
 
