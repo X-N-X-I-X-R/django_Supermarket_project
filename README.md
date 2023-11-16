@@ -16,6 +16,6 @@ https://github.com/01001110IR/django_Supermarket_project.git# django_Supermarket
 
 
 
-gunicorn config.wsgi:application
+$gunicorn front.asgi:application
 
 

@@ -16,9 +16,13 @@
 
 
 <body data-user-id="user1">  
-
     <div class="top-logo">
-        <img src="http://127.0.0.1:8000/static/images/walmartLogo.svg" alt="Walmart Logo" height="30">
+        <script>'MY_SERVER_render = https://grocerystoredjango-updatee.onrender.com/'
+        'my servrt django http://127.0.0.1:8000'
+        
+        </script>
+        
+        <img src="https://grocerystoredjango-updatee.onrender.com/static/images/walmartLogo.svg" alt="Walmart Logo" height="30">
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Product Page</a>
@@ -69,9 +73,9 @@
     <script>
         const userId = document.body.getAttribute("data-user-id");
 
-        const cart = [];// // http://127.0.0.1:8000/
+        const cart = [];// // https://grocerystoredjango-updatee.onrender.com/
         // http://127.0.0.1:8000/
-        const MY_SERVER = "http://127.0.0.1:8000/";
+        const MY_SERVER = "https://grocerystoredjango-updatee.onrender.com/";
      
         const load_display = async () => {
             try {
@@ -255,7 +259,7 @@ const userId = sessionStorage.getItem('userId'); // Or wherever the user ID is s
     
         console.log("Request data:", requestData);
     
-        const MY_SERVER = " http://127.0.0.1:8000/";
+        const MY_SERVER = " https://grocerystoredjango-updatee.onrender.com/";
         const endpoint1 = "get/Customer/new";
         const endpoint2 = "get/Customer/order";
     
